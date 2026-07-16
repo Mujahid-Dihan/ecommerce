@@ -19,7 +19,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $shop = $request->user()->shop;
-        
+
         if (!$shop) {
             return redirect()->route('seller.dashboard')->with('error', 'You must have a shop to manage products.');
         }
@@ -43,7 +43,7 @@ class ProductController extends Controller
         if ($categories->isEmpty()) {
             $categories = Category::all();
         }
-        
+
         $brands = Brand::all();
         $attributes = \App\Models\Attribute::with('values')->get();
 
@@ -164,18 +164,18 @@ class ProductController extends Controller
     public function edit(Request $request, Product $product)
     {
         $shop = $request->user()->shop;
-        
+
         if (!$shop || $product->shop_id !== $shop->id) {
             abort(403, 'Unauthorized access.');
         }
 
         $product->load(['variants', 'digitalAssets']);
-        
+
         $categories = Category::whereNotNull('parent_id')->get();
         if ($categories->isEmpty()) {
             $categories = Category::all();
         }
-        
+
         $brands = Brand::all();
         $attributes = \App\Models\Attribute::with('values')->get();
 
@@ -193,7 +193,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $shop = $request->user()->shop;
-        
+
         if (!$shop || $product->shop_id !== $shop->id) {
             abort(403, 'Unauthorized access.');
         }
@@ -250,7 +250,7 @@ class ProductController extends Controller
 
         // Update product variants
         $incomingVariantStrings = array_column($validated['variants'], 'variant_string');
-        
+
         // Delete variants that are no longer present
         $product->variants()->whereNotIn('variant_string', $incomingVariantStrings)->delete();
 
@@ -271,7 +271,7 @@ class ProductController extends Controller
         // Handle Digital Asset update
         if ($validated['product_type'] === 'digital') {
             $digitalAsset = \App\Models\DigitalAsset::where('product_id', $product->id)->first();
-            
+
             $digitalData = [
                 'download_limit' => $validated['download_limit'] ?? null,
             ];
@@ -297,7 +297,7 @@ class ProductController extends Controller
     public function destroy(Request $request, Product $product)
     {
         $shop = $request->user()->shop;
-        
+
         if (!$shop || $product->shop_id !== $shop->id) {
             abort(403, 'Unauthorized access.');
         }

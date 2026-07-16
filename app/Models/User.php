@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'user_type', 'banned'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -38,5 +38,6 @@ class User extends Authenticatable
     public function socialLogins() { return $this->hasMany(SocialLogin::class); }
     public function affiliateUser() { return $this->hasOne(AffiliateUser::class); }
     public function classifiedProducts() { return $this->hasMany(ClassifiedProduct::class); }
+    public function staffRoles() { return $this->belongsToMany(StaffRole::class, 'staff_role_user'); }
 
 }
